@@ -51,11 +51,11 @@ function saveCSV(arrayOfCoins){
 	timeForSaveCSV = (performance.now() - timeForSaveCSV) / 1000;
 }
 
-async function saveImage(arrayOfCoins){
+function saveImage(arrayOfCoins){
 	timeForSaveImage = performance.now();
 
 	if (!fs.existsSync('images')){
-    fs.mkdirSync('images');
+		fs.mkdirSync('images');
 	}
 	arrayOfCoins.forEach(async el=>{
 		let url = el['icon'];

@@ -12,7 +12,7 @@ var timeForGetRequest = performance.now();
 
 async function main(){
 	await axios.get(link)
-		.then( saveDataToCSV )
+		.then( getRequest )
 		.then( saveCSV ) 
 		.then( saveImage )
 		.catch(error=>{console.log(error);});
@@ -24,7 +24,7 @@ async function main(){
 }
 main();
 
-function saveDataToCSV(response){
+function getRequest(response){
 	timeForGetRequest = (performance.now() - timeForGetRequest) / 1000;
 
 	let dataFromRequest = JSON.parse(JSON.stringify(response.data));

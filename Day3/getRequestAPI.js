@@ -10,9 +10,19 @@ var timeForSaveCSV;
 var timeForSaveImage;
 var timeForGetRequest = performance.now();
 
-axios.get(link)
-	.then( saveDataToCSV ) 
-	.catch(error=>{console.log(error);});
+async function main(){
+	await axios.get(link)
+		.then( saveDataToCSV )
+		.then( saveCSV ) 
+		.then( saveImage )
+		.catch(error=>{console.log(error);});
+
+	console.log(`Time to get request = ${timeForGetRequest}.`);
+	console.log(`Time to save csv file = ${timeForSaveCSV}.`);
+	console.log(`Time to save image = ${timeForSaveImage}.`);
+	console.log(`Summary = ${timeForGetRequest+timeForSaveCSV+timeForSaveImage}`);
+}
+main();
 
 function saveDataToCSV(response){
 	timeForGetRequest = (performance.now() - timeForGetRequest) / 1000;
@@ -20,16 +30,7 @@ function saveDataToCSV(response){
 	let dataFromRequest = JSON.parse(JSON.stringify(response.data));
 	const arrayOfCoins = dataFromRequest[Object.keys(dataFromRequest)[0]];
 
-	// save file
-	saveCSV(arrayOfCoins);
-
-	//save image with its own name
-	saveImage(arrayOfCoins);
-
-	console.log(`Time to get request = ${timeForGetRequest}.`);
-	console.log(`Time to save csv file = ${timeForSaveCSV}.`);
-	console.log(`Time to save image = ${timeForSaveImage}.`);
-	console.log(`Summary = ${timeForGetRequest+timeForSaveCSV+timeForSaveImage}`);
+	return arrayOfCoins;
 }
 
 function saveCSV(arrayOfCoins){
@@ -49,6 +50,8 @@ function saveCSV(arrayOfCoins){
 	stream.pipe(fs.createWriteStream('output.csv'));
 
 	timeForSaveCSV = (performance.now() - timeForSaveCSV) / 1000;
+
+	return arrayOfCoins;
 }
 
 function saveImage(arrayOfCoins){
